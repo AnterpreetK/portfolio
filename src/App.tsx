@@ -3,7 +3,9 @@ import React from 'react';
 import Portfolio from './Portfolio';
 
 function App() {
-  return <Portfolio />;
+  return <Portfolio/>;
 }
+
+
 
 export default App;
