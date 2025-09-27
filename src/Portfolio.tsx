@@ -13,17 +13,10 @@ const Portfolio = () => {
   const [minimizedWindows, setMinimizedWindows] = useState<string[]>([
     'projects',
     'skills',
-    'terminal',
     'explorer',
     'contact',
   ]);
   const [time, setTime] = useState(new Date());
-  const [terminalInput, setTerminalInput] = useState('');
-  const [terminalHistory, setTerminalHistory] = useState([
-    '> System initialized',
-    '> Portfolio v3.0 loaded',
-    '> Type "help" for commands'
-  ]);
   const [fileExplorerPath, setFileExplorerPath] = useState('/home/janhvi');
   type Project = {
     id: number;
@@ -50,44 +43,12 @@ const Portfolio = () => {
   // REMOVE THE HARDCODED projects, skills, and fileSystem objects from here
   // They're now imported from the files above
 
-  const handleTerminalCommand = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      const command = terminalInput.toLowerCase().trim();
-      let response = '';
-      
-      switch(command) {
-        case 'help':
-          response = 'Commands: about | skills | projects | contact | clear | date';
-          break;
-        case 'about':
-          response = 'Janhvi - 3rd Year CS Student | Full-Stack Developer | Tech Enthusiast';
-          break;
-        case 'skills':
-          response = 'Primary: React, Node.js, Python | Learning: ML, Cloud Computing';
-          break;
-        case 'projects':
-          response = `${projects.length} projects completed | Type "ls projects" for list`;
-          break;
-        case 'ls projects':
-          response = projects.map(p => p.name).join(' | ');
-          break;
-        case 'contact':
-          response = 'Email: janhvi@example.com | LinkedIn: /in/janhvi';
-          break;
-        case 'clear':
-          setTerminalHistory(['> Terminal cleared']);
-          setTerminalInput('');
-          return;
-        case 'date':
-          response = new Date().toString();
-          break;
-        default:
-          response = `Command not found: ${command}. Type "help" for commands`;
-      }
-      
-      setTerminalHistory([...terminalHistory, `> ${terminalInput}`, response]);
-      setTerminalInput('');
-    }
+  const handleContactFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setContactFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
   type WindowProps = {
@@ -101,17 +62,16 @@ const Portfolio = () => {
     if (minimizedWindows.includes(id)) return null;
     
     return (
-      <div className={`absolute ${id === activeWindow ? 'z-30' : 'z-20'} 
-        ${id === 'about' ? 'top-10 left-10' : ''}
-        ${id === 'projects' ? 'top-20 right-10' : ''}
-        ${id === 'skills' ? 'bottom-20 left-10' : ''}
-        ${id === 'terminal' ? 'bottom-10 right-10' : ''}
-        ${id === 'contact' ? 'top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2' : ''}
-        ${id === 'explorer' ? 'top-32 left-32' : ''}
-        w-11/12 md:w-auto`}
+      <div
+        className={`absolute flex flex-col ${id === activeWindow ? 'z-30' : 'z-20'} ${
+          id === 'explorer'
+            ? 'top-4 right-4 w-[450px] h-[400px]'
+            : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75vw] h-[75vh]'
+        }`}
         onClick={() => setActiveWindow(id)}>
-        <div className="bg-white rounded-lg shadow-2xl border-2 border-gray-800 overflow-hidden">
-          <div className="bg-gradient-to-r from-teal-400 to-cyan-400 p-2 flex justify-between items-center cursor-move">
+        <div className="bg-white rounded-lg shadow-2xl border-2 border-gray-800 overflow-hidden flex flex-col flex-grow">
+          {/* The cursor-move is kept for future drag-and-drop implementation */}
+          <div className="bg-gradient-to-r from-teal-400 to-cyan-400 p-2 flex justify-between items-center cursor-move flex-shrink-0">
             <div className="flex items-center space-x-2">
               <Icon className="w-4 h-4 text-gray-800" />
               <span className="text-sm font-bold text-gray-800">{title}</span>
@@ -133,7 +93,7 @@ const Portfolio = () => {
               </button>
             </div>
           </div>
-          <div className="bg-gray-50 max-h-96 overflow-y-auto">
+          <div className="bg-gray-50 overflow-y-auto flex-grow">
             {children}
           </div>
         </div>
@@ -174,15 +134,6 @@ const Portfolio = () => {
         </button>
         <button 
           onClick={() => {
-            setActiveWindow('terminal');
-            setMinimizedWindows(minimizedWindows.filter(w => w !== 'terminal'));
-          }}
-          className="flex flex-col items-center p-2 hover:bg-white/30 rounded transition-colors">
-          <Terminal className="w-12 h-12 text-gray-700 mb-1" />
-          <span className="text-xs text-gray-700">Terminal</span>
-        </button>
-        <button 
-          onClick={() => {
             setActiveWindow('explorer');
             setMinimizedWindows(minimizedWindows.filter(w => w !== 'explorer'));
           }}
@@ -203,7 +154,7 @@ const Portfolio = () => {
 
       {/* Windows */}
       <Window id="about" title="ANTER'S PORTFOLIO.EXE" icon={User}>
-        <div className="p-6 w-96">
+        <div className="p-6">
           <div className="flex items-center space-x-4 mb-4">
             <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
               <User className="w-10 h-10 text-white" />
@@ -235,7 +186,7 @@ const Portfolio = () => {
       </Window>
 
       <Window id="projects" title="PROJECT_MANAGER.APP" icon={Briefcase}>
-        <div className="p-6 w-96 md:w-[500px]">
+        <div className="p-6">
           <h3 className="text-lg font-bold mb-4 text-gray-800">Recent Projects</h3>
           <div className="space-y-3">
             {projects.map((project) => (
@@ -275,7 +226,7 @@ const Portfolio = () => {
       </Window>
 
       <Window id="skills" title="SKILLS.CONFIG" icon={Cpu}>
-        <div className="p-6 w-96 md:w-[500px]">
+        <div className="p-6">
           <h3 className="text-lg font-bold mb-4 text-gray-800">Technical Skills</h3>
           <div className="space-y-3">
             {Object.entries(skills).map(([category, items]) => (
@@ -300,29 +251,8 @@ const Portfolio = () => {
         </div>
       </Window>
 
-      <Window id="terminal" title="TERMINAL.SH" icon={Terminal}>
-        <div className="p-4 w-96 bg-black text-green-400 font-mono text-xs">
-          <div className="h-48 overflow-y-auto mb-2">
-            {terminalHistory.map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
-          </div>
-          <div className="flex items-center">
-            <span className="mr-2">janhvi@portfolio:~$</span>
-            <input
-              type="text"
-              value={terminalInput}
-              onChange={(e) => setTerminalInput(e.target.value)}
-              onKeyPress={handleTerminalCommand}
-              className="flex-1 bg-transparent outline-none text-green-400"
-              placeholder="type 'help'"
-            />
-          </div>
-        </div>
-      </Window>
-
       <Window id="explorer" title="FILE_EXPLORER.BIN" icon={FolderOpen}>
-        <div className="p-4 w-96">
+        <div className="p-4">
           <div className="flex items-center space-x-2 mb-3 text-xs bg-gray-100 p-2 rounded">
             <Home className="w-4 h-4 text-gray-600" />
             <span className="text-gray-600">{fileExplorerPath}</span>
@@ -343,28 +273,31 @@ const Portfolio = () => {
       </Window>
 
       <Window id="contact" title="CONTACT_ME.MSG" icon={MessageCircle}>
-        <div className="p-6 w-96">
+        <div className="p-6">
           <h3 className="text-lg font-bold mb-4 text-gray-800">Let's Connect!</h3>
-          <form className="space-y-3">
+          <form className="space-y-3" onClick={(e) => e.stopPropagation()}>
             <input
               type="text"
+              name="name"
               placeholder="Your Name"
               value={contactFormData.name}
-              onChange={(e) => setContactFormData({...contactFormData, name: e.target.value})}
+              onChange={handleContactFormChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-cyan-400"
             />
             <input
               type="email"
+              name="email"
               placeholder="your.email@example.com"
               value={contactFormData.email}
-              onChange={(e) => setContactFormData({...contactFormData, email: e.target.value})}
+              onChange={handleContactFormChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-cyan-400"
             />
             <textarea
               placeholder="Your message..."
+              name="message"
               rows={4}
               value={contactFormData.message}
-              onChange={(e) => setContactFormData({...contactFormData, message: e.target.value})}
+              onChange={handleContactFormChange}
               className="w-full px-3 py-2 text-sm border border-gray-300 rounded focus:outline-none focus:border-cyan-400"
             />
             <button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-teal-500 text-white py-2 rounded hover:from-cyan-600 hover:to-teal-600 transition-colors text-sm font-semibold">
@@ -374,16 +307,16 @@ const Portfolio = () => {
           <div className="mt-4 pt-4 border-t border-gray-200">
             <p className="text-xs text-gray-600 mb-2">Connect with me:</p>
             <div className="flex space-x-3">
-              <a href="#" className="text-gray-600 hover:text-cyan-600 transition-colors">
+              <a href="mailto:anterpreet@example.com" className="text-gray-600 hover:text-cyan-600 transition-colors">
                 <Mail className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-cyan-600 transition-colors">
+              <a href="https://github.com/AnterpreetK" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-cyan-600 transition-colors">
                 <Github className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-cyan-600 transition-colors">
+              <a href="https://www.linkedin.com/in/anterpreetkaur09/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-cyan-600 transition-colors">
                 <Linkedin className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-600 hover:text-cyan-600 transition-colors">
+              <a href="https://twitter.com/your-profile" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-cyan-600 transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>

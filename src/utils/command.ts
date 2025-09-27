@@ -19,7 +19,7 @@ export const useCommands = () => {
           response = 'Commands: about | skills | projects | contact | clear | date';
           break;
         case 'about':
-          response = 'Janhvi - 3rd Year CS Student | Full-Stack Developer | Tech Enthusiast';
+          response = 'Anterpreet - 3rd Year CS Student | Full-Stack Developer | Tech Enthusiast';
           break;
         case 'skills':
           response = 'Primary: React, Node.js, Python | Learning: ML, Cloud Computing';
@@ -31,7 +31,7 @@ export const useCommands = () => {
           response = projects.map(p => p.name).join(' | ');
           break;
         case 'contact':
-          response = 'Email: anterpreet@example.com | LinkedIn: /in/anterpreet';
+          response = 'Email: kanterpreet09@example.com | LinkedIn: /in/anterpreet09';
           break;
         case 'clear':
           setTerminalHistory(['> Terminal cleared']);
