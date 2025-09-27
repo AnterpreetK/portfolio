@@ -31,7 +31,7 @@ export const useCommands = () => {
           response = projects.map(p => p.name).join(' | ');
           break;
         case 'contact':
-          response = 'Email: janhvi@example.com | LinkedIn: /in/janhvi';
+          response = 'Email: anterpreet@example.com | LinkedIn: /in/anterpreet';
           break;
         case 'clear':
           setTerminalHistory(['> Terminal cleared']);

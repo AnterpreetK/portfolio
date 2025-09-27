@@ -18,7 +18,7 @@ export const projects = [
   },
   {
     id: 3,
-    name: 'Real-time Analytics Dashboard',
+    name: 'Quiz App using Springboot',
     tech: ['Vue.js', 'D3.js', 'WebSocket', 'PostgreSQL'],
     description: 'Live data visualization platform for business metrics',
     github: 'github.com/janhvi/analytics',

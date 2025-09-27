@@ -1,5 +1,5 @@
 export const fileSystem = {
-  '/home/janhvi': {
+  '/home/anterpreet': {
     type: 'folder',
     children: {
       'projects': {

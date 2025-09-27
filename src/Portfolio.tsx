@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { User, Briefcase, Code, Terminal, FolderOpen, Folder, Mail, Coffee, Zap, Minimize, Maximize, X, Github, Globe, Cpu, Star, Home, FileText, MessageCircle, Linkedin, Twitter } from 'lucide-react';
-import Window from './components/Window';
-import DesktopIcons from './components/DesktopIcons';
-import Taskbar from './components/Taskbar';
-import Clouds from './components/Clouds';
 import { projects } from './utils/projects';
 import { skills } from './utils/skills';
 import { fileSystem } from './utils/fileSystem';
 import './styles/globals.css';
 import './styles/variables.css';
+import './styles/Portfolio.css';
+import Clouds from './components/Clouds';
 
 const Portfolio = () => {
   const [activeWindow, setActiveWindow] = useState('about');
-  const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
+  const [minimizedWindows, setMinimizedWindows] = useState<string[]>([
+    'projects',
+    'skills',
+    'terminal',
+    'explorer',
+    'contact',
+  ]);
   const [time, setTime] = useState(new Date());
   const [terminalInput, setTerminalInput] = useState('');
   const [terminalHistory, setTerminalHistory] = useState([
@@ -121,7 +125,10 @@ const Portfolio = () => {
               <button className="w-5 h-5 bg-green-400 rounded-full border border-gray-700 hover:bg-green-500 transition-colors">
                 <Maximize className="w-3 h-3 mx-auto" />
               </button>
-              <button className="w-5 h-5 bg-red-400 rounded-full border border-gray-700 hover:bg-red-500 transition-colors">
+              <button
+                onClick={() => setMinimizedWindows([...minimizedWindows, id])}
+                className="w-5 h-5 bg-red-400 rounded-full border border-gray-700 hover:bg-red-500 transition-colors"
+              >
                 <X className="w-3 h-3 mx-auto" />
               </button>
             </div>
@@ -135,14 +142,7 @@ const Portfolio = () => {
   };
 
   const Desktop = () => (
-    <div className="relative min-h-screen bg-gradient-to-br from-cyan-100 via-teal-100 to-cyan-200 overflow-hidden">
-      {/* Animated clouds */}
-      <div className="absolute inset-0">
-        <div className="cloud cloud1"></div>
-        <div className="cloud cloud2"></div>
-        <div className="cloud cloud3"></div>
-      </div>
-
+    <>
       {/* Desktop Icons */}
       <div className="absolute top-4 left-4 space-y-4 z-10">
         <button 
@@ -202,7 +202,7 @@ const Portfolio = () => {
       </div>
 
       {/* Windows */}
-      <Window id="about" title="JANHVI'S PORTFOLIO.EXE" icon={User}>
+      <Window id="about" title="ANTER'S PORTFOLIO.EXE" icon={User}>
         <div className="p-6 w-96">
           <div className="flex items-center space-x-4 mb-4">
             <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
@@ -210,12 +210,12 @@ const Portfolio = () => {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-800">Hi! Welcome to my portfolio!</h2>
-              <p className="text-sm text-gray-600">Digital Me v3.0</p>
+              {/* <p className="text-sm text-gray-600">Digital Me v3.0</p> */}
             </div>
           </div>
           <div className="space-y-3 text-sm">
             <p className="text-gray-700">
-              Hey there! I'm Janhvi, a passionate 3rd-year Computer Science student with a deep love for creating innovative digital solutions.
+              I'm Anterpreet Kaur, a passionate 3rd-year Computer Science student with a deep love for creating innovative digital solutions.
             </p>
             <p className="text-gray-700">
               I specialize in full-stack web development with expertise in modern JavaScript frameworks, cloud technologies, and emerging AI/ML applications.
@@ -294,7 +294,7 @@ const Portfolio = () => {
           <div className="mt-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded border border-purple-200">
             <p className="text-xs text-gray-600">
               <Star className="w-3 h-3 inline mr-1 text-yellow-500" />
-              Currently learning: Rust, Kubernetes, Three.js
+              Currently learning: Rust, Kubernetes, Three.js, AI/ML
             </p>
           </div>
         </div>
@@ -328,7 +328,7 @@ const Portfolio = () => {
             <span className="text-gray-600">{fileExplorerPath}</span>
           </div>
           <div className="space-y-1">
-            {Object.entries(fileSystem['/home/janhvi'].children).map(([name, item]) => (
+            {Object.entries(fileSystem['/home/anterpreet'].children).map(([name, item]) => (
               <div key={name} className="flex items-center space-x-2 p-2 hover:bg-gray-100 rounded cursor-pointer text-sm">
                 {item.type === 'folder' ? (
                   <Folder className="w-4 h-4 text-yellow-600" />
@@ -427,10 +427,15 @@ const Portfolio = () => {
           <p className="text-gray-300">Lofi Beats to Code To</p>
         </div>
       </div>
-    </div>
+    </>
   );
 
-  return <Desktop />;
+  return (
+    <div className="relative min-h-screen bg-gradient-to-br from-cyan-100 via-teal-100 to-cyan-200 overflow-hidden">
+      <Clouds />
+      <Desktop />
+    </div>
+  );
 };
 
 export default Portfolio;
